@@ -10,8 +10,8 @@ string reorderSpaces(string text) {
     string newText = "";
     int dif = 0;
     vector<size_t> words;
+    string spaces;
 
-    cout << "size : " << size << endl;
     for (size_t i = 0; i < size;) {
         while (i < size && text[i] == ' ') {
             spaceNum++;
@@ -20,64 +20,34 @@ string reorderSpaces(string text) {
         if (i >= size)
             break ;
         words.push_back(i);
-        cout << "start i: " << i << endl;
-        while (i < size && text[i] != ' ') {
-            // cout << "in word i: " << i << " letter: " << text[i] << endl;
+        while (i < size && text[i] != ' ') 
             i++;
-        }
-        cout << " between i: " << i << endl;
+
+        words.push_back(i);
         if (i >= size)
             break ;
-        words.push_back(i);
-        cout << "end i: " << i << endl;
     }
-    cout << "words size: " << words.size()  << endl;
     if (words.size() > 2)
         dif = spaceNum / (words.size() / 2 - 1);
     else
         dif = spaceNum;
-    cout << "space num: " << spaceNum << endl;
-    
-    cout << "dif: " << dif << endl;
-    
-    for (int i = 0; i < words.size(); i++)
-        cout << "words i: " << words[i] << endl;
 
-    size_t j = 0;
-    string spaces;
+
     for (int i = 0; i < dif; i++)
         spaces += " ";
-    size_t i = 0;
-    while (i < size) {
-        cout << " i: " << i << endl;
+    for (size_t j = 0; j < words.size(); j += 2) {
         newText += text.substr(words[j], words[j + 1] - words[j]);
-        i += (words[j + 1] - words[j]);
-        cout << "word: " << text.substr(words[j], words[j + 1] - words[j]) << " i: " << i << endl;
-        //if (j == words.size())
-        cout << " i: " << i << endl;
-        if (i >= size - 1)
-            break ;
-        j += 2;
-        // while (words[j] < words[j + 1]) {
-        //     cout << "text: " << text[words[j]] << endl;
-        //     newText += to_string(text[words[j]]);
-        //     words[j]++;
-        //     i++;
-        // }
-        // j += 2; 
-        
-        newText += spaces;
-        i += dif;
-        
+        if (j != words.size() - 2)
+            newText += spaces;
     }
-    cout << "here i: " << i << endl;
-    for (i; i < size; i++)
+    int mod = spaceNum - (dif * (words.size() / 2 - 1));
+    for (int i = 0; i < mod; i++)
         newText += " ";
     return newText;
 }
 
 int main(int argc, char** argv) {
     if (argc == 2)
-        cout << "rearrange spaces text: \n|" << reorderSpaces(argv[1]) << "|\n";
+        cout << "rearrange spaces text: |" << reorderSpaces(argv[1]) << "|\n";
     return 0;
 }
