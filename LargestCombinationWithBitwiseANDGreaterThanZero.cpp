@@ -2,19 +2,18 @@
 #include <vector>
 #include <algorithm>
 
-void comb(int N, int K)
+void comb(std::vector<int>* combinations, std::vector<int> nums, int N, int K)
 {
     std::string bitmask(K, 1); // K leading 1's
     bitmask.resize(N, 0); // N-K trailing 0's
 
     // print integers and permute bitmask
     do {
-        for (int i = 0; i < N; ++i) // [0..N-1] integers
-        {
+        for (size_t i = 0; i < nums.size(); ++i) // [0..N-1] integers
+		{
             if (bitmask[i])
-				std::cout << " " << i;
+				combinations->push_back(nums[i]);
         }
-        std::cout << std::endl;
     } while (std::prev_permutation(bitmask.begin(), bitmask.end()));
 }
 
@@ -45,44 +44,50 @@ void Print(int *a, int n)
 }
 
 std::vector<std::vector<int> > getCombinations(std::vector<int> nums) {
-	std::vector<std::vector<int> > combinations;
+	std::vector<std::vector<int> > combinations(nums.size() + 1);
 
-	nums.clear();
-    for (size_t i = 1; i <= nums.size(); i++) {
-        
+	for (size_t i = 0; i <= nums.size(); i++) {
+		combinations[i] = std::vector<int>();
+        if (i > 1)
+			comb(&combinations[i], nums, nums.size(), i);
     }
-	comb(4, 2);
+
+	/* for (size_t i = 0; i < combinations.size(); i++) {
+		for (size_t j = 0; j < combinations[i].size(); j++) {
+			if (!(j % i))
+				std::cout << std::endl;
+			std::cout << combinations[i][j] << " ";
+		}
+		std::cout << std::endl;
+	} */
+	
 	return combinations;
 }
 
 int main() {
-    /* std::cout << (16 & 17) << std::endl;
-    std::cout << (16 & 71) << std::endl;
-    std::cout << (16 & 62) << std::endl;
-    std::cout << (17 & 71) << std::endl;
-    std::cout << (17 & 62) << std::endl;
-    std::cout << (71 & 62) << std::endl;
-    std::cout << (16 & 17 & 71) << std::endl;
-    std::cout << (16 & 17 & 62) << std::endl;
-    std::cout << (16 & 71 & 62) << std::endl;
-    std::cout << (17 & 71 & 62) << std::endl;
-    std::cout << (16 & 17 & 71 & 62) << std::endl;*/
-
-
-    std::vector<int> candidates = {16, 17, 71, 62};
-	int* a;
-	a = new int[4];
-	a[0] = 16; 
-	a[1] =	17;
-	a[2] = 71;
-	a[3] = 62;
-    std::vector<std::vector<int> > combinations;
-    // size_t maxSize = 0;
-    // combinations = getCombinations(candidates);
-	for (size_t i = 1; i <= 4; i++) {
-		while (NextSet(a, 4, i))
-			Print(a, i);
+    std::vector<int> candidates = {16,17,71,62,12,24,14};
+	std::vector<std::vector<int> > combinations;
+	int res = 0, ans = 0;
+    
+	if (candidates.size() == 1)
+		std::cout << candidates[0] << std::endl;
+    combinations = getCombinations(candidates);
+	for (size_t i = 2; i < combinations.size(); i++) {
+		res = 0;
+		for (size_t j = 0; j < combinations[i].size(); j++) {
+			if (!(j % i)) {
+				// if (res)
+				// 	std::cout << "res: " << res << " i: " << i << std::endl;
+				if (res > 0)
+                	ans = i;
+				res = combinations[i][j];
+			}
+			res = res & combinations[i][j];
+		}
+		if (res > 0)
+			ans = i;
+		//std::cout << std::endl;
 	}
-	delete[] a;
+	std::cout << ans << std::endl;
     return 0;
 }
