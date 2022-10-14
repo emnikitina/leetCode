@@ -25,5 +25,6 @@ int main() {
             max = std::max(max, zeros[i - 1] + zeros[i + 1]);
     }
     std::cout << max << std::endl;
+    delete[] sequence;
     return 0;
 }
